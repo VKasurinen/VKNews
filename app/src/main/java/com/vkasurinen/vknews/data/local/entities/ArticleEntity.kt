@@ -1,9 +1,12 @@
 package com.vkasurinen.vknews.data.local.entities
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
-@Entity(tableName = "articles")
+@Parcelize
+@Entity
 data class ArticleEntity(
     @PrimaryKey val url: String,
     val author: String?,
@@ -14,4 +17,4 @@ data class ArticleEntity(
     val content: String?,
     val sourceId: String?,
     val sourceName: String?
-)
+) : Parcelable

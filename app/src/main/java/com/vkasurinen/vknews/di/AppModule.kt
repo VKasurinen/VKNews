@@ -3,6 +3,8 @@ package com.vkasurinen.vknews.di
 import androidx.room.Room
 import com.vkasurinen.vknews.data.local.NewsDatabase
 import com.vkasurinen.vknews.data.remote.NewsApi
+import com.vkasurinen.vknews.data.repository.NewsRepositoryImpl
+import com.vkasurinen.vknews.domain.repository.NewsRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -34,7 +36,17 @@ val appModule = module {
         Room.databaseBuilder(
             androidContext(),
             NewsDatabase::class.java,
-            "gamedb.db"
+            "news.db"
         ).build()
     }
+
+    single { get<NewsDatabase>().newsDao }
+
+    single<NewsRepository> {
+        NewsRepositoryImpl(
+            newsApi = get(),
+            newsDao = get()
+        )
+    }
+
 }
