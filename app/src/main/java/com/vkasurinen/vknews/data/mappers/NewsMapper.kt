@@ -7,15 +7,15 @@ import com.vkasurinen.vknews.domain.model.Source
 
 fun ArticleData.toEntity(): ArticleEntity {
     return ArticleEntity(
-        author = author,
-        content = content,
-        description = description,
-        publishedAt = publishedAt,
-        sourceId = source.id,
-        sourceName = source.name,
-        title = title,
+        author = author ?: "",
+        content = content ?: "",
+        description = description ?: "",
+        publishedAt = publishedAt ?: "",
+        sourceId = source.id ?: "",
+        sourceName = source.name ?: "",
+        title = title ?: "",
         url = url,
-        urlToImage = urlToImage
+        urlToImage = urlToImage ?: ""
     )
 }
 

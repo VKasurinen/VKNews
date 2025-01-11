@@ -22,8 +22,8 @@ interface NewsApi {
     ): ArticleDto
 
     companion object {
-        const val BASE_URL = "https://api.rawg.io/api/"
-        const val API_KEY = "d189fe14fd79460c98b7cc5b4b6e6307"
+        const val BASE_URL = "https://newsapi.org/v2/"
+        const val API_KEY = "9d1a1df04e6f4e0889b74c1e323c72ad"
     }
 
 }

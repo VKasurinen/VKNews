@@ -5,6 +5,7 @@ import com.vkasurinen.vknews.data.local.NewsDatabase
 import com.vkasurinen.vknews.data.remote.NewsApi
 import com.vkasurinen.vknews.data.repository.NewsRepositoryImpl
 import com.vkasurinen.vknews.domain.repository.NewsRepository
+import com.vkasurinen.vknews.presentation.homescreen.HomeViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -48,5 +49,7 @@ val appModule = module {
             newsDao = get()
         )
     }
+
+    viewModel { HomeViewModel(get()) }
 
 }

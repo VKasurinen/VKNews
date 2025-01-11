@@ -1,5 +1,6 @@
 package com.vkasurinen.vknews.data.remote
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.vkasurinen.vknews.data.local.entities.ArticleEntity
@@ -25,8 +26,13 @@ class NewsPagingSource(
         return try {
             val newsResponse = newsApi.getNews(sources = sources, page = page)
             totalNewsCount += newsResponse.articles.size
-            val articles = newsResponse.articles.distinctBy { it.title } //Remove duplicates
-                .map { it.toEntity() }
+            val articles = newsResponse.articles.distinctBy { it.title } // Remove duplicates
+                .map {
+                    Log.d("NewsPagingSource", "Mapping article data to entity: $it")
+                    it.toEntity()
+                }
+
+            Log.d("NewsPagingSource", "Loaded articles: $articles")
 
             LoadResult.Page(
                 data = articles,
@@ -35,9 +41,7 @@ class NewsPagingSource(
             )
         } catch (e: Exception) {
             e.printStackTrace()
-            LoadResult.Error(
-                throwable = e
-            )
+            LoadResult.Error(throwable = e)
         }
     }
 }

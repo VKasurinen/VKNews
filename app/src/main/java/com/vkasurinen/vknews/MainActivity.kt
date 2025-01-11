@@ -9,15 +9,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.lifecycleScope
+import com.vkasurinen.vknews.data.remote.NewsApi
+import com.vkasurinen.vknews.domain.model.Article
+import com.vkasurinen.vknews.domain.model.Source
 import com.vkasurinen.vknews.domain.repository.NewsRepository
+import com.vkasurinen.vknews.presentation.homescreen.HomeScreen
 import com.vkasurinen.vknews.ui.theme.VKNewsTheme
 import com.vkasurinen.vknews.util.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
@@ -25,6 +29,7 @@ class MainActivity : ComponentActivity() {
 
 
     private val newsRepository: NewsRepository by inject()
+    private val newsApi: NewsApi by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,84 +39,72 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 
                     Box(modifier = Modifier.padding(innerPadding)) {
-                        Text(text = "asd")
+                        HomeScreen()
                     }
 
 
                 }
             }
         }
-        testNewsRepository()
 
+        //testNewsApi2()
+        testNewsRepository()
     }
 
 
     private fun testNewsRepository() {
+        lifecycleScope.launch {
+            newsRepository.getNews(listOf("bbc-news", "abc-news", "die-zeit", "business-insider"))
+                .collectLatest { resource ->
+                    when (resource) {
+                        is Resource.Success -> {
+                            Log.d("MainActivity", "News fetched successfully: ${resource.data}")
+                            resource.data?.forEach { article ->
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    newsRepository.upsertArticle(article)
+                                    Log.d("MainActivity", "Inserted article: $article")
+                                }
+                            }
+                        }
+                        is Resource.Error -> {
+                            Log.e("MainActivity", "Error fetching news: ${resource.message}")
+                        }
+                        is Resource.Loading -> {
+                            Log.d("MainActivity", "Loading news...")
+                        }
+                    }
+                }
+        }
+    }
+
+
+    private fun testNewsApi() {
         CoroutineScope(Dispatchers.IO).launch {
-            newsRepository.getArticles().collect { resource ->
-                when (resource) {
-                    is Resource.Loading<*> -> {
-                        Log.d("MainActivity", "Loading data...")
-                    }
-
-                    is Resource.Success<*> -> {
-                        Log.d("MainActivity", "Data loaded successfully: ${resource.data}")
-                    }
-
-                    is Resource.Error<*> -> {
-                        Log.e("MainActivity", "Error loading data: ${resource.message}")
-                    }
-
-                    else -> {
-                        Log.e("MainActivity", "Unknown resource state")
-                    }
-                }
-            }
-
-            newsRepository.getNews(listOf("source1", "source2")).collect { resource ->
-                when (resource) {
-                    is Resource.Loading<*> -> {
-                        Log.d("MainActivity", "Loading news...")
-                    }
-
-                    is Resource.Success<*> -> {
-                        Log.d("MainActivity", "News loaded successfully: ${resource.data}")
-                    }
-
-                    is Resource.Error<*> -> {
-                        Log.e("MainActivity", "Error loading news: ${resource.message}")
-                    }
-
-                    else -> {
-                        Log.e("MainActivity", "Unknown resource state")
-                    }
-                }
-            }
-
-            newsRepository.searchNews("query", listOf("source1", "source2")).collect { resource ->
-                when (resource) {
-                    is Resource.Loading<*> -> {
-                        Log.d("MainActivity", "Searching news...")
-                    }
-
-                    is Resource.Success<*> -> {
-                        Log.d(
-                            "MainActivity",
-                            "Search results loaded successfully: ${resource.data}"
-                        )
-                    }
-
-                    is Resource.Error<*> -> {
-                        Log.e("MainActivity", "Error searching news: ${resource.message}")
-                    }
-
-                    else -> {
-                        Log.e("MainActivity", "Unknown resource state")
-                    }
-                }
+            try {
+                val response = newsApi.searchNews(searchQuery = "bitcoin", sources = "", page = 1)
+                Log.d("MainActivity", "API response: ${response.articles}")
+            } catch (e: Exception) {
+                Log.e("MainActivity", "API call failed: ${e.message}")
             }
         }
     }
+
+    //listOf("bbc-news","abc-news","al-jazeera-english")
+
+    //die-zeit
+    //business-insider
+
+    private fun testNewsApi2() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = newsApi.getNews(sources = "bitcoin", page = 1)
+                Log.d("MainActivity", "API response: ${response.articles}")
+            } catch (e: Exception) {
+                Log.e("MainActivity", "API call failed: ${e.message}")
+            }
+        }
+    }
+
 }
 
 

@@ -14,6 +14,9 @@ interface NewsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(article: ArticleEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(articles: List<ArticleEntity>)
+
     @Delete
     suspend fun delete(article: ArticleEntity)
 
@@ -22,5 +25,4 @@ interface NewsDao {
 
     @Query("SELECT * FROM ArticleEntity WHERE url=:url")
     suspend fun getArticle(url: String): ArticleEntity?
-
 }
