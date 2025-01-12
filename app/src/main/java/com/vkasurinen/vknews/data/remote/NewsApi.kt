@@ -21,6 +21,12 @@ interface NewsApi {
         @Query("apiKey") apiKey: String = API_KEY
     ): ArticleDto
 
+    @GET("top-headlines")
+    suspend fun getTopHeadlines(
+        @Query("country") country: String,
+        @Query("apiKey") apiKey: String = API_KEY
+    ): ArticleDto
+
     companion object {
         const val BASE_URL = "https://newsapi.org/v2/"
         const val API_KEY = "9d1a1df04e6f4e0889b74c1e323c72ad"

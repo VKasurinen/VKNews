@@ -59,6 +59,37 @@ class HomeViewModel(
                 }
         }
     }
+
+    private fun fetchTopHeadlines() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+
+            newsRepository.getTopHeadlines("us").collectLatest { resource ->
+                when (resource) {
+                    is Resource.Success -> {
+                        resource.data?.let { articles ->
+                            _state.update {
+                                it.copy(
+                                    articles = articles,
+                                    isLoading = false
+                                )
+                            }
+                        }
+                    }
+                    is Resource.Error -> {
+                        _state.update { it.copy(isLoading = false) }
+                    }
+                    is Resource.Loading -> {
+                        _state.update { it.copy(isLoading = resource.isLoading) }
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
 }
 
 //    private fun searchNews(query: String) {

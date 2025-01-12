@@ -152,4 +152,51 @@ class NewsRepositoryImpl(
             emit(Resource.Loading(false))
         }
     }
+
+    override suspend fun getTopHeadlines(country: String): Flow<Resource<List<Article>>> {
+        return flow {
+            emit(Resource.Loading(true))
+            val localArticles = newsDao.getArticles().firstOrNull() ?: emptyList()
+
+            val shouldLoadLocalArticles = localArticles.isNotEmpty()
+
+            if (shouldLoadLocalArticles) {
+                emit(Resource.Success(
+                    data = localArticles.map { articleEntity ->
+                        articleEntity.toDomainModel()
+                    }
+                ))
+                emit(Resource.Loading(false))
+                return@flow
+            }
+
+            val articlesFromApi = try {
+                newsApi.getTopHeadlines(country = country)
+            } catch (e: IOException) {
+                e.printStackTrace()
+                emit(Resource.Error(message = "Error fetching top headlines"))
+                return@flow
+            } catch (e: HttpException) {
+                e.printStackTrace()
+                emit(Resource.Error(message = "Error fetching top headlines"))
+                return@flow
+            } catch (e: Exception) {
+                e.printStackTrace()
+                emit(Resource.Error(message = "Error fetching top headlines"))
+                return@flow
+            }
+
+            val articleEntities = articlesFromApi.articles.map { articleData ->
+                articleData.toEntity()
+            }
+
+            newsDao.upsert(articleEntities)
+
+            emit(Resource.Success(
+                articleEntities.map { it.toDomainModel() }
+            ))
+            emit(Resource.Loading(false))
+        }
+    }
+
 }

@@ -19,4 +19,6 @@ interface NewsRepository {
 
     suspend fun getArticle(url: String): Flow<Resource<Article>>?
 
+    suspend fun getTopHeadlines(country: String): Flow<Resource<List<Article>>>
+
 }

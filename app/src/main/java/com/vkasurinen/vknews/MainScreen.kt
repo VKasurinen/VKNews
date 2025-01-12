@@ -23,6 +23,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.vkasurinen.vknews.presentation.homescreen.HomeScreen
+import com.vkasurinen.vknews.presentation.homescreen.HomeScreenRoot
 import com.vkasurinen.vknews.util.Screen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -83,7 +84,7 @@ fun MainScreen(navController: NavHostController) {
                 startDestination = Screen.Home.route
             ) {
                 composable(Screen.Home.route) {
-                    HomeScreen()
+                    HomeScreenRoot(navController = navController)
                 }
 
                 composable(Screen.Search.route) {

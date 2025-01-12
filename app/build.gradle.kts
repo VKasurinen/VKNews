@@ -103,5 +103,8 @@ dependencies {
     // System UI Controller
     implementation(libs.accompanist.systemuicontroller)
 
+    //Extented images
+    implementation(libs.material.icons.extended)
+
 
 }
