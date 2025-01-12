@@ -1,4 +1,12 @@
 package com.vkasurinen.vknews.util
 
-class Screen {
+sealed class Screen(val route: String) {
+
+    object Main : Screen("main")
+    object Home : Screen("home")
+    object Search : Screen("search")
+    object Saved: Screen("saved")
+
+
+
 }

@@ -1,5 +1,6 @@
 package com.vkasurinen.vknews.presentation.homescreen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -7,22 +8,37 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.navigation.NavHostController
 import org.koin.androidx.compose.koinViewModel
 import com.vkasurinen.vknews.domain.model.Article
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
-    val state by viewModel.state.collectAsState()
+fun HomeScreenRoot(
+    navController: NavHostController,
+    viewModel: HomeViewModel = koinViewModel(),
+) {
+    val state = viewModel.state.collectAsState().value
+    HomeScreen(
+        state = state,
+        onAction = viewModel::onEvent,
+        navHostController = navController
+    )
+}
 
-    if (state.isLoading) {
-        Text(text = "Loading news...")
-    } else {
-        LazyColumn {
-            items(state.articles) { article ->
-                ArticleItem(article = article)
-            }
-        }
-    }
+
+
+
+@Composable
+fun HomeScreen(
+    state: HomeState,
+    onAction: (HomeUiEvent) -> Unit,
+    navHostController: NavHostController
+) {
+
+
+
+
 }
 
 @Composable

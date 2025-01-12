@@ -4,51 +4,64 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.vkasurinen.vknews.data.remote.NewsApi
-import com.vkasurinen.vknews.domain.model.Article
-import com.vkasurinen.vknews.domain.model.Source
 import com.vkasurinen.vknews.domain.repository.NewsRepository
-import com.vkasurinen.vknews.presentation.homescreen.HomeScreen
 import com.vkasurinen.vknews.ui.theme.VKNewsTheme
 import com.vkasurinen.vknews.util.Resource
+import com.vkasurinen.vknews.util.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
 
-
     private val newsRepository: NewsRepository by inject()
+
     private val newsApi: NewsApi by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             VKNewsTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-
-                    Box(modifier = Modifier.padding(innerPadding)) {
-                        HomeScreen()
+                SetBarColor(color = MaterialTheme.colorScheme.inverseOnSurface)
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    val navController = rememberNavController()
+                    NavHost(
+                        navController = navController,
+                        startDestination = Screen.Main.route
+                    ) {
+                        composable(Screen.Main.route) {
+                            MainScreen(navController)
+                        }
                     }
-
-
                 }
             }
         }
+    }
 
-        //testNewsApi2()
-        testNewsRepository()
+    @Composable
+    private fun SetBarColor(color: Color) {
+        val systemUiController = rememberSystemUiController()
+        LaunchedEffect(key1 = color) {
+            systemUiController.setSystemBarsColor(color)
+        }
     }
 
 
@@ -89,6 +102,8 @@ class MainActivity : ComponentActivity() {
 
 
 
+
 }
+
 
 
