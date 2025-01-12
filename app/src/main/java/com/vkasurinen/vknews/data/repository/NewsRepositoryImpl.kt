@@ -18,7 +18,7 @@ class NewsRepositoryImpl(
     private val newsApi: NewsApi,
     private val newsDao: NewsDao
 ) : NewsRepository {
-    override fun getNews(sources: List<String>): Flow<Resource<List<Article>>> {
+    override suspend fun getNews(sources: List<String>): Flow<Resource<List<Article>>> {
         return flow {
             emit(Resource.Loading(true))
             val localArticles = newsDao.getArticles().firstOrNull() ?: emptyList()
@@ -64,7 +64,7 @@ class NewsRepositoryImpl(
         }
     }
 
-    override fun searchNews(searchQuery: String, sources: List<String>): Flow<Resource<List<Article>>> {
+    override suspend fun searchNews(searchQuery: String, sources: List<String>): Flow<Resource<List<Article>>> {
         return flow {
             emit(Resource.Loading(true))
             val localArticles = newsDao.getArticles().firstOrNull() ?: emptyList()
@@ -120,7 +120,7 @@ class NewsRepositoryImpl(
         newsDao.delete(article.toEntity())
     }
 
-    override fun getArticles(): Flow<Resource<List<Article>>> {
+    override suspend fun getArticles(): Flow<Resource<List<Article>>> {
         return flow {
             emit(Resource.Loading())
             try {
@@ -136,7 +136,20 @@ class NewsRepositoryImpl(
         }
     }
 
-    override suspend fun getArticle(url: String): Article? {
-        return newsDao.getArticle(url = url)?.toDomainModel()
+    override suspend fun getArticle(url: String): Flow<Resource<Article>> {
+        return flow {
+            emit(Resource.Loading(true))
+            try {
+                val articleEntity = newsDao.getArticle(url = url)
+                if (articleEntity != null) {
+                    emit(Resource.Success(articleEntity.toDomainModel()))
+                } else {
+                    emit(Resource.Error("Article not found"))
+                }
+            } catch (e: Exception) {
+                emit(Resource.Error("Error fetching article: ${e.message}"))
+            }
+            emit(Resource.Loading(false))
+        }
     }
 }
