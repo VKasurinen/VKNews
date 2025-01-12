@@ -23,6 +23,7 @@ ksp = "1.9.0-1.0.13"
 
 navigationCompose = "2.8.5"
 accompanistSystemUiController = "0.27.0"
+uiTextGoogleFonts = "1.7.6"
 
 
 [libraries]
@@ -62,6 +63,7 @@ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanistSystemUiController" }
+androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

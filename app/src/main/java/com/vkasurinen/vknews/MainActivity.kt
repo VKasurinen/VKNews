@@ -76,8 +76,6 @@ class MainActivity : ComponentActivity() {
                 }
         }
     }
-
-
     private fun testNewsApi() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -89,21 +87,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    //listOf("bbc-news","abc-news","al-jazeera-english")
 
-    //die-zeit
-    //business-insider
-
-    private fun testNewsApi2() {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response = newsApi.getNews(sources = "bitcoin", page = 1)
-                Log.d("MainActivity", "API response: ${response.articles}")
-            } catch (e: Exception) {
-                Log.e("MainActivity", "API call failed: ${e.message}")
-            }
-        }
-    }
 
 }
 
