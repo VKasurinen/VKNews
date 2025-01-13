@@ -20,6 +20,7 @@ class HomeViewModel(
 
     init {
         fetchNews()
+        fetchTopHeadlines()
     }
 
     fun onEvent(event: HomeUiEvent) {
@@ -70,7 +71,7 @@ class HomeViewModel(
                         resource.data?.let { articles ->
                             _state.update {
                                 it.copy(
-                                    articles = articles,
+                                    topHeadlines = articles,
                                     isLoading = false
                                 )
                             }
@@ -86,26 +87,4 @@ class HomeViewModel(
             }
         }
     }
-
-
-
-
 }
-
-//    private fun searchNews(query: String) {
-//        viewModelScope.launch {
-//            _state.update { it.copy(isLoading = true) }
-//
-//            val filteredArticles = state.value.articles.filter {
-//                it.title.contains(query, ignoreCase = true) || it.description.contains(query, ignoreCase = true)
-//            }
-//
-//            _state.update {
-//                it.copy(
-//                    articles = filteredArticles,
-//                    isLoading = false
-//                )
-//            }
-//        }
-//    }
-//}
