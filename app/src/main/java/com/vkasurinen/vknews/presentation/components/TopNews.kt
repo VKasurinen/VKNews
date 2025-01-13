@@ -1,5 +1,6 @@
 package com.vkasurinen.vknews.presentation.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -34,6 +35,9 @@ fun TopNews(topHeadlines: List<Article>, navHostController: NavHostController) {
                     modifier = Modifier
                         .width(350.dp)
                         .padding(horizontal = 8.dp)
+                        .clickable {
+                            navHostController.navigate("details/${article.url}")
+                        }
                 ) {
                     CoilImage(
                         url = article.urlToImage,

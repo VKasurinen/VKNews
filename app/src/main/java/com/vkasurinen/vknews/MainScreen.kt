@@ -19,9 +19,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.vkasurinen.vknews.presentation.details.DetailsScreenRoot
 import com.vkasurinen.vknews.presentation.homescreen.HomeScreen
 import com.vkasurinen.vknews.presentation.homescreen.HomeScreenRoot
 import com.vkasurinen.vknews.util.Screen
@@ -92,6 +95,14 @@ fun MainScreen(navController: NavHostController) {
                 }
 
                 composable(Screen.Saved.route) {
+
+                }
+
+                composable(
+                    route = Screen.Details.route + "/{articleUrl}",
+                    arguments = listOf(navArgument("articleUrl") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    val articleUrl = backStackEntry.arguments?.getString("articleUrl") ?: ""
 
                 }
 

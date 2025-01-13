@@ -1,6 +1,7 @@
 package com.vkasurinen.vknews.presentation.homescreen
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -98,7 +99,11 @@ fun HomeScreen(
                 ) {
                     items(state.articles.size) { index ->
                         Column(
-                            modifier = Modifier.padding(8.dp)
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .clickable {
+                                    navHostController.navigate("details/${state.articles[index].url}")
+                                }
                         ) {
                             CoilImage(
                                 url = state.articles[index].urlToImage,
