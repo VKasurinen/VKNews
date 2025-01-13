@@ -54,61 +54,67 @@ fun HomeScreen(
     Column {
         if (state.topHeadlines.isNotEmpty()) {
             TopNews(
-                articles = state.topHeadlines,
+                topHeadlines = state.topHeadlines,
                 navHostController = navHostController
             )
         }
 
-        Spacer(modifier = Modifier.padding(4.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
         Divider(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
+                .height(1.dp)
         )
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        Text(
-            text = "Recent News",
-            style = MaterialTheme.typography.titleLarge,
-            fontSize = 25.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(horizontal = 8.dp)
-        )
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+        ) {
+            Text(
+                text = "Recent News",
+                style = MaterialTheme.typography.titleLarge,
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
-        if (state.isLoading) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        } else {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(vertical = 8.dp, horizontal = 4.dp)
-            ) {
-                items(state.articles.size) { index ->
-                    Column(
-                        modifier = Modifier.padding(8.dp)
-                    ) {
-                        CoilImage(
-                            url = state.articles[index].urlToImage,
-                            contentDescription = state.articles[index].title
-                        )
+            if (state.isLoading) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            } else {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(vertical = 8.dp, horizontal = 4.dp)
+                ) {
+                    items(state.articles.size) { index ->
+                        Column(
+                            modifier = Modifier.padding(8.dp)
+                        ) {
+                            CoilImage(
+                                url = state.articles[index].urlToImage,
+                                contentDescription = state.articles[index].title
+                            )
 
-                        Spacer(modifier = Modifier.height(5.dp))
+                            Spacer(modifier = Modifier.height(5.dp))
 
-                        Text(
-                            text = state.articles[index].title,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 20.sp,
-                            maxLines = 3,
-                            overflow = TextOverflow.Ellipsis
-                        )
+                            Text(
+                                text = state.articles[index].title,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 20.sp,
+                                maxLines = 3,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
                     }
                 }
             }

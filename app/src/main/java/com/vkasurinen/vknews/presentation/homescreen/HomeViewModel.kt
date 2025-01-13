@@ -1,5 +1,6 @@
 package com.vkasurinen.vknews.presentation.homescreen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vkasurinen.vknews.domain.model.Article
@@ -36,10 +37,11 @@ class HomeViewModel(
             _state.update { it.copy(isLoading = true) }
 
             newsRepository.getNews(listOf("bbc-news", "abc-news", "die-zeit", "business-insider"))
-                .collectLatest { resource ->
-                    when (resource) {
+                .collectLatest { result ->
+                    when (result) {
                         is Resource.Success -> {
-                            resource.data?.let { articles ->
+                            result.data?.let { articles ->
+                                Log.d("HomeViewModel", "Fetched news: $articles")
                                 _state.update {
                                     it.copy(
                                         articles = articles,
@@ -54,7 +56,7 @@ class HomeViewModel(
                         }
 
                         is Resource.Loading -> {
-                            _state.update { it.copy(isLoading = resource.isLoading) }
+                            _state.update { it.copy(isLoading = result.isLoading) }
                         }
                     }
                 }
@@ -65,13 +67,17 @@ class HomeViewModel(
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
-            newsRepository.getTopHeadlines("us").collectLatest { resource ->
-                when (resource) {
+            newsRepository.getTopHeadlines("us").collectLatest { result ->
+                when (result) {
                     is Resource.Success -> {
-                        resource.data?.let { articles ->
+                        result.data?.let { articles ->
+                            val filteredArticles = articles.filter {
+                                !it.title.contains("[Removed]")
+                            }
+                            Log.d("HomeViewModel", "Fetched top headlines: $filteredArticles")
                             _state.update {
                                 it.copy(
-                                    topHeadlines = articles,
+                                    topHeadlines = filteredArticles,
                                     isLoading = false
                                 )
                             }
@@ -81,7 +87,7 @@ class HomeViewModel(
                         _state.update { it.copy(isLoading = false) }
                     }
                     is Resource.Loading -> {
-                        _state.update { it.copy(isLoading = resource.isLoading) }
+                        _state.update { it.copy(isLoading = result.isLoading) }
                     }
                 }
             }
