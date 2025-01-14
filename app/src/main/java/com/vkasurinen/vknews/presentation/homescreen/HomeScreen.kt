@@ -3,14 +3,18 @@ package com.vkasurinen.vknews.presentation.homescreen
 import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
@@ -103,13 +107,19 @@ fun HomeScreen(
 
             ArticlesList(
                 state = homeState,
-                onClick = { article -> navigateToDetails(navHostController, article) }
+                onClick = { article, isTopNews -> navigateToDetails(navHostController, article, isTopNews) }
             )
         }
     }
 }
 
-private fun navigateToDetails(navController: NavHostController, article: Article) {
+private fun navigateToDetails(navController: NavHostController, article: Article, isTopNews: Boolean) {
     navController.currentBackStackEntry?.savedStateHandle?.set("articleUrl", article.url)
+    navController.currentBackStackEntry?.savedStateHandle?.set("isTopNews", isTopNews)
     navController.navigate(Screen.Details.route)
 }
+
+//private fun navigateToDetails(navController: NavHostController, article: Article) {
+//    navController.currentBackStackEntry?.savedStateHandle?.set("articleUrl", article.url)
+//    navController.navigate(Screen.Details.route)
+//}

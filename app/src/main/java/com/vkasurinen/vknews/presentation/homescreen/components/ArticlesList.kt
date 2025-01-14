@@ -27,13 +27,10 @@ import com.vkasurinen.vknews.presentation.homescreen.HomeState
 @Composable
 fun ArticlesList(
     state: HomeState,
-    onClick: (Article) -> Unit
+    onClick: (Article, Boolean) -> Unit
 ) {
     if (state.isLoading) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }
     } else {
@@ -47,15 +44,10 @@ fun ArticlesList(
                 Column(
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
-                        .clickable { onClick(article) }
+                        .clickable { onClick(article, false) }
                 ) {
-                    CoilImage(
-                        url = article.urlToImage,
-                        contentDescription = article.title
-                    )
-
+                    CoilImage(url = article.urlToImage, contentDescription = article.title)
                     Spacer(modifier = Modifier.height(5.dp))
-
                     Text(
                         text = article.title,
                         fontWeight = FontWeight.SemiBold,

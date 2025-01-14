@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class DetailsViewModel(
-private val newsRepository: NewsRepository,
-private val savedStateHandle: SavedStateHandle
+    private val newsRepository: NewsRepository,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val articleUrl = savedStateHandle.get<String>("articleUrl")
@@ -25,7 +25,6 @@ private val savedStateHandle: SavedStateHandle
     init {
         articleUrl?.let { getArticle(it) }
     }
-
 
     fun onEvent(event: DetailsUiEvent) {
         when (event) {
@@ -54,4 +53,28 @@ private val savedStateHandle: SavedStateHandle
             }
         }
     }
+
+
+    fun getTopHeadlineArticle(url: String) {
+        viewModelScope.launch {
+            _detailsState.update { it.copy(isLoading = true) }
+
+            newsRepository.getTopHeadlineArticle(url).collectLatest { result ->
+                when (result) {
+                    is Resource.Error -> {
+                        _detailsState.update { it.copy(isLoading = false) }
+                    }
+                    is Resource.Loading -> {
+                        _detailsState.update { it.copy(isLoading = result.isLoading) }
+                    }
+                    is Resource.Success -> {
+                        result.data?.let { article ->
+                            _detailsState.update { it.copy(article = article) }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }

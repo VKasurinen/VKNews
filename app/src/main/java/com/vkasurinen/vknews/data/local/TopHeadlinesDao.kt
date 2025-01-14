@@ -18,4 +18,8 @@ interface TopHeadlinesDao {
 
     @Query("SELECT * FROM TopHeadlineEntity")
     fun getTopHeadlines(): Flow<List<TopHeadlineEntity>>
+
+    @Query("SELECT * FROM TopHeadlineEntity WHERE url=:url")
+    suspend fun getArticle(url: String): TopHeadlineEntity?
+
 }

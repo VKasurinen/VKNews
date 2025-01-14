@@ -33,12 +33,19 @@ import org.koin.androidx.compose.koinViewModel
 fun DetailsScreenRoot(
     navController: NavHostController,
     viewModel: DetailsViewModel = koinViewModel(),
+    isTopNews: Boolean
 ) {
     val articleUrl = navController.previousBackStackEntry?.savedStateHandle?.get<String>("articleUrl")
     val state = viewModel.detailsState.collectAsState().value
 
     LaunchedEffect(articleUrl) {
-        articleUrl?.let { viewModel.getArticle(it) }
+        articleUrl?.let {
+            if (isTopNews) {
+                viewModel.getTopHeadlineArticle(it)
+            } else {
+                viewModel.getArticle(it)
+            }
+        }
     }
 
     state.article?.let { article ->
@@ -115,7 +122,7 @@ fun DetailsScreen(
                         .height(200.dp)
                         .clip(MaterialTheme.shapes.medium),
 
-                )
+                    )
 
                 Spacer(modifier = Modifier.height(35.dp))
 
@@ -144,7 +151,6 @@ fun DetailsScreen(
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 fun DetailsScreenPreview() {

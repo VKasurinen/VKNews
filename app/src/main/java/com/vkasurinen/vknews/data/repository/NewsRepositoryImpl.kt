@@ -139,6 +139,8 @@ class NewsRepositoryImpl(
         }
     }
 
+
+
     override suspend fun getArticle(url: String): Flow<Resource<Article>> {
         return flow {
             emit(Resource.Loading(true))
@@ -199,6 +201,23 @@ class NewsRepositoryImpl(
             emit(Resource.Success(
                 topHeadlineEntities.map { it.toDomainModel() }
             ))
+            emit(Resource.Loading(false))
+        }
+    }
+
+    override suspend fun getTopHeadlineArticle(url: String): Flow<Resource<Article>> {
+        return flow {
+            emit(Resource.Loading(true))
+            try {
+                val articleEntity = topHeadlinesDao.getArticle(url = url)
+                if (articleEntity != null) {
+                    emit(Resource.Success(articleEntity.toDomainModel()))
+                } else {
+                    emit(Resource.Error("Article not found"))
+                }
+            } catch (e: Exception) {
+                emit(Resource.Error("Error fetching article: ${e.message}"))
+            }
             emit(Resource.Loading(false))
         }
     }

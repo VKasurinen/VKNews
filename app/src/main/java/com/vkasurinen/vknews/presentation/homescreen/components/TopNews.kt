@@ -20,29 +20,21 @@ import com.vkasurinen.vknews.util.Screen
 fun TopNews(
     topHeadlines: List<Article>,
     navHostController: NavHostController,
-    navigateToDetails: (NavHostController, Article) -> Unit
+    navigateToDetails: (NavHostController, Article, Boolean) -> Unit
 ) {
     Column(modifier = Modifier.padding(horizontal = 8.dp)) {
-
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             items(topHeadlines) { article ->
                 Column(
                     modifier = Modifier
                         .width(350.dp)
                         .padding(horizontal = 8.dp)
                         .clickable {
-                            navigateToDetails(navHostController, article)
+                            navigateToDetails(navHostController, article, true)
                         }
                 ) {
-                    CoilImage(
-                        url = article.urlToImage,
-                        contentDescription = "Name"
-                    )
-
+                    CoilImage(url = article.urlToImage, contentDescription = "Name")
                     Spacer(modifier = Modifier.height(5.dp))
-
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -55,9 +47,7 @@ fun TopNews(
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.primary
                         )
-
                         Spacer(modifier = Modifier.height(5.dp))
-
                         Text(
                             text = article.title,
                             fontWeight = FontWeight.SemiBold,

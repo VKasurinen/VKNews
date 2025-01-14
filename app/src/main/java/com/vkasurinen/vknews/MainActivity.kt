@@ -52,12 +52,14 @@ class MainActivity : ComponentActivity() {
                             MainScreen(navController)
                         }
                         composable(Screen.Details.route) {
-                            DetailsScreenRoot(navController = navController)
+                            val isTopNews = navController.previousBackStackEntry?.savedStateHandle?.get<Boolean>("isTopNews") ?: false
+                            DetailsScreenRoot(navController = navController, isTopNews = isTopNews)
                         }
                     }
                 }
             }
         }
+        testGetArticle()
     }
 
     @Composable
@@ -68,30 +70,23 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-//    private fun testNewsRepository() {
-//        lifecycleScope.launch {
-//            newsRepository.getNews(listOf("bbc-news", "abc-news", "die-zeit", "business-insider"))
-//                .collectLatest { resource ->
-//                    when (resource) {
-//                        is Resource.Success -> {
-//                            Log.d("MainActivity", "News fetched successfully: ${resource.data}")
-//                            resource.data?.forEach { article ->
-//                                CoroutineScope(Dispatchers.IO).launch {
-//                                    newsRepository.upsertArticle(article)
-//                                    Log.d("MainActivity", "Inserted article: $article")
-//                                }
-//                            }
-//                        }
-//                        is Resource.Error -> {
-//                            Log.e("MainActivity", "Error fetching news: ${resource.message}")
-//                        }
-//                        is Resource.Loading -> {
-//                            Log.d("MainActivity", "Loading news...")
-//                        }
-//                    }
-//                }
-//        }
-//    }
+    private fun testGetArticle() {
+        lifecycleScope.launch {
+            newsRepository.getTopHeadlineArticle("https://www.cnn.com/2025/01/12/travel/india-maha-kumbh-mela-2025-intl-hnk/index.html")?.collectLatest { resource ->
+                when (resource) {
+                    is Resource.Success -> {
+                        Log.d("MainActivity", "Top headlines fetched successfully: ${resource.data}")
+                    }
+                    is Resource.Error -> {
+                        Log.e("MainActivity", "Error fetching top headlines: ${resource.message}")
+                    }
+                    is Resource.Loading -> {
+                        Log.d("MainActivity", "Loading top headlines...")
+                    }
+                }
+            }
+        }
+    }
 
     private fun testNewsApi() {
         CoroutineScope(Dispatchers.IO).launch {
