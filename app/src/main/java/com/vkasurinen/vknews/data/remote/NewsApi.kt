@@ -1,6 +1,7 @@
 package com.vkasurinen.vknews.data.remote
 
 import com.vkasurinen.vknews.data.remote.dto.ArticleDto
+import com.vkasurinen.vknews.data.remote.dto.TopHeadlinesDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -25,7 +26,7 @@ interface NewsApi {
     suspend fun getTopHeadlines(
         @Query("country") country: String,
         @Query("apiKey") apiKey: String = API_KEY
-    ): ArticleDto
+    ): TopHeadlinesDto
 
     companion object {
         const val BASE_URL = "https://newsapi.org/v2/"

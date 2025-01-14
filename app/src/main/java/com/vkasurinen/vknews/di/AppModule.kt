@@ -43,11 +43,13 @@ val appModule = module {
     }
 
     single { get<NewsDatabase>().newsDao }
+    single { get<NewsDatabase>().topHeadlinesDao }
 
     single<NewsRepository> {
         NewsRepositoryImpl(
             newsApi = get(),
-            newsDao = get()
+            newsDao = get(),
+            topHeadlinesDao = get()
         )
     }
 
