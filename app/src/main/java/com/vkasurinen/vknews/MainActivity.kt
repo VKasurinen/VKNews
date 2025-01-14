@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.vkasurinen.vknews.data.remote.NewsApi
 import com.vkasurinen.vknews.domain.repository.NewsRepository
+import com.vkasurinen.vknews.presentation.details.DetailsScreenRoot
 import com.vkasurinen.vknews.ui.theme.VKNewsTheme
 import com.vkasurinen.vknews.util.Resource
 import com.vkasurinen.vknews.util.Screen
@@ -50,6 +51,9 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.Main.route) {
                             MainScreen(navController)
                         }
+                        composable(Screen.Details.route) {
+                            DetailsScreenRoot(navController = navController)
+                        }
                     }
                 }
             }
@@ -64,31 +68,31 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+//    private fun testNewsRepository() {
+//        lifecycleScope.launch {
+//            newsRepository.getNews(listOf("bbc-news", "abc-news", "die-zeit", "business-insider"))
+//                .collectLatest { resource ->
+//                    when (resource) {
+//                        is Resource.Success -> {
+//                            Log.d("MainActivity", "News fetched successfully: ${resource.data}")
+//                            resource.data?.forEach { article ->
+//                                CoroutineScope(Dispatchers.IO).launch {
+//                                    newsRepository.upsertArticle(article)
+//                                    Log.d("MainActivity", "Inserted article: $article")
+//                                }
+//                            }
+//                        }
+//                        is Resource.Error -> {
+//                            Log.e("MainActivity", "Error fetching news: ${resource.message}")
+//                        }
+//                        is Resource.Loading -> {
+//                            Log.d("MainActivity", "Loading news...")
+//                        }
+//                    }
+//                }
+//        }
+//    }
 
-    private fun testNewsRepository() {
-        lifecycleScope.launch {
-            newsRepository.getNews(listOf("bbc-news", "abc-news", "die-zeit", "business-insider"))
-                .collectLatest { resource ->
-                    when (resource) {
-                        is Resource.Success -> {
-                            Log.d("MainActivity", "News fetched successfully: ${resource.data}")
-                            resource.data?.forEach { article ->
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    newsRepository.upsertArticle(article)
-                                    Log.d("MainActivity", "Inserted article: $article")
-                                }
-                            }
-                        }
-                        is Resource.Error -> {
-                            Log.e("MainActivity", "Error fetching news: ${resource.message}")
-                        }
-                        is Resource.Loading -> {
-                            Log.d("MainActivity", "Loading news...")
-                        }
-                    }
-                }
-        }
-    }
     private fun testNewsApi() {
         CoroutineScope(Dispatchers.IO).launch {
             try {

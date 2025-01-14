@@ -97,15 +97,6 @@ fun MainScreen(navController: NavHostController) {
                 composable(Screen.Saved.route) {
 
                 }
-
-                composable(
-                    route = Screen.Details.route + "/{articleUrl}",
-                    arguments = listOf(navArgument("articleUrl") { type = NavType.StringType })
-                ) { backStackEntry ->
-                    val articleUrl = backStackEntry.arguments?.getString("articleUrl") ?: ""
-
-                }
-
             }
         }
     }

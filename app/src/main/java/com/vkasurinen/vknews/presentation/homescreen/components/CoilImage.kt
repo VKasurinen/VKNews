@@ -1,4 +1,4 @@
-package com.vkasurinen.vknews.presentation.components
+package com.vkasurinen.vknews.presentation.homescreen.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class DetailsViewModel(
-    private val newsRepository: NewsRepository,
-    private val savedStateHandle: SavedStateHandle
+private val newsRepository: NewsRepository,
+private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val articleUrl = savedStateHandle.get<String>("articleUrl")
@@ -23,7 +23,7 @@ class DetailsViewModel(
     val detailsState = _detailsState.asStateFlow()
 
     init {
-        getArticle(articleUrl ?: "")
+        articleUrl?.let { getArticle(it) }
     }
 
 
@@ -33,7 +33,7 @@ class DetailsViewModel(
         }
     }
 
-    private fun getArticle(url: String) {
+    fun getArticle(url: String) {
         viewModelScope.launch {
             _detailsState.update { it.copy(isLoading = true) }
 

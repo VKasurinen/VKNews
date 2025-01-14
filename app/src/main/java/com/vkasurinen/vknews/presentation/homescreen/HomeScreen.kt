@@ -1,6 +1,7 @@
 package com.vkasurinen.vknews.presentation.homescreen
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,8 +30,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import org.koin.androidx.compose.koinViewModel
 import com.vkasurinen.vknews.domain.model.Article
-import com.vkasurinen.vknews.presentation.components.CoilImage
-import com.vkasurinen.vknews.presentation.components.TopNews
+import com.vkasurinen.vknews.presentation.homescreen.components.ArticlesList
+import com.vkasurinen.vknews.presentation.homescreen.components.CoilImage
+import com.vkasurinen.vknews.presentation.homescreen.components.TopNews
+import com.vkasurinen.vknews.util.Screen
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -56,7 +59,8 @@ fun HomeScreen(
         if (state.topHeadlines.isNotEmpty()) {
             TopNews(
                 topHeadlines = state.topHeadlines,
-                navHostController = navHostController
+                navHostController = navHostController,
+                navigateToDetails = ::navigateToDetails
             )
         }
 
@@ -84,45 +88,15 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            if (state.isLoading) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            } else {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(vertical = 8.dp, horizontal = 4.dp)
-                ) {
-                    items(state.articles.size) { index ->
-                        Column(
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .clickable {
-                                    navHostController.navigate("details/${state.articles[index].url}")
-                                }
-                        ) {
-                            CoilImage(
-                                url = state.articles[index].urlToImage,
-                                contentDescription = state.articles[index].title
-                            )
-
-                            Spacer(modifier = Modifier.height(5.dp))
-
-                            Text(
-                                text = state.articles[index].title,
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 20.sp,
-                                maxLines = 3,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
-                    }
-                }
-            }
+            ArticlesList(
+                state = state,
+                onClick = { article -> navigateToDetails(navHostController, article) }
+            )
         }
     }
+}
+
+private fun navigateToDetails(navController: NavHostController, article: Article) {
+    navController.currentBackStackEntry?.savedStateHandle?.set("articleUrl", article.url)
+    navController.navigate(Screen.Details.route)
 }

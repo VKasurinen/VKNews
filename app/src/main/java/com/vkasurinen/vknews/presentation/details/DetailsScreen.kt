@@ -3,21 +3,27 @@ package com.vkasurinen.vknews.presentation.details
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.vkasurinen.vknews.domain.model.Article
 import com.vkasurinen.vknews.domain.model.Source
-import com.vkasurinen.vknews.presentation.components.CoilImage
+import com.vkasurinen.vknews.presentation.homescreen.components.CoilImage
 import com.vkasurinen.vknews.presentation.details.components.DetailsTopBar
 import com.vkasurinen.vknews.ui.theme.VKNewsTheme
 import org.koin.androidx.compose.koinViewModel
@@ -28,10 +34,14 @@ fun DetailsScreenRoot(
     navController: NavHostController,
     viewModel: DetailsViewModel = koinViewModel(),
 ) {
+    val articleUrl = navController.previousBackStackEntry?.savedStateHandle?.get<String>("articleUrl")
     val state = viewModel.detailsState.collectAsState().value
 
-    val article = navController.previousBackStackEntry?.savedStateHandle?.get<Article>("article")
-    article?.let {
+    LaunchedEffect(articleUrl) {
+        articleUrl?.let { viewModel.getArticle(it) }
+    }
+
+    state.article?.let { article ->
         DetailsScreen(
             article = article,
             navHostController = navController,
@@ -56,11 +66,19 @@ fun DetailsScreen(
     ) {
         DetailsTopBar(
             onBrowsingClick = {
-                Intent(Intent.ACTION_VIEW).also {
-                    it.data = Uri.parse(article.url)
-                    if (it.resolveActivity(context.packageManager) != null) {
-                        context.startActivity(it)
+                val url = article.url
+                Log.d("DetailsScreen", "Attempting to open URL: $url")
+                if (url.isNotEmpty()) {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    if (intent.resolveActivity(context.packageManager) != null) {
+                        context.startActivity(intent)
+                    } else {
+                        Log.e("DetailsScreen", "No activity found to handle the intent for URL: $url")
+                        // Fallback mechanism: Show a message to the user
+                        Toast.makeText(context, "No application can handle this request. Please install a web browser.", Toast.LENGTH_LONG).show()
                     }
+                } else {
+                    Log.e("DetailsScreen", "Invalid URL: $url")
                 }
             },
             onShareClick = {
@@ -86,30 +104,43 @@ fun DetailsScreen(
                 top = 16.dp
             )
         ) {
-            item {
 
+            item {
                 CoilImage(
                     url = article.urlToImage,
                     contentDescription = article.title,
+                    aspectRatio = 4f / 3f,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(200.dp)
                         .clip(MaterialTheme.shapes.medium),
-                    aspectRatio = 4f / 3f
+
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(35.dp))
+
                 Text(
                     text = article.title,
-                    style = MaterialTheme.typography.displaySmall,
-                    //color = colorResource(id = R.color.text_title)
-                )
-                Text(
-                    text = article.content,
-                    style = MaterialTheme.typography.bodyMedium,
-                    //color = colorResource(id = R.color.body)
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp,
+                    maxLines = 4,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
+
+            item {
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = article.title,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 15.sp,
+                    //maxLines = 3,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
         }
     }
 }
