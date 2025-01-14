@@ -39,6 +39,7 @@ fun MainScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             TopAppBar(
+                modifier = Modifier.height(45.dp),
                 title = {
                     IconButton(onClick = { /* Handle menu click */ }) {
                         Icon(

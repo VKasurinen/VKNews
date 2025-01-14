@@ -27,7 +27,7 @@ fun TopNews(
             items(topHeadlines) { article ->
                 Column(
                     modifier = Modifier
-                        .width(350.dp)
+                        .width(300.dp)
                         .padding(horizontal = 8.dp)
                         .clickable {
                             navigateToDetails(navHostController, article, true)

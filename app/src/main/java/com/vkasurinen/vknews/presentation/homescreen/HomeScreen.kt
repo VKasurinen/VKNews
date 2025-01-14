@@ -2,6 +2,7 @@ package com.vkasurinen.vknews.presentation.homescreen
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,6 +28,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -62,16 +64,16 @@ fun HomeScreen(
     onAction: (HomeUiEvent) -> Unit,
     navHostController: NavHostController
 ) {
-    Column {
+    Column() {
         Text(
             text = "Top News",
             style = MaterialTheme.typography.titleLarge,
             fontSize = 25.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(horizontal = 8.dp)
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
 
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(2.dp))
 
         if (topHeadlinesState.topHeadlines.isNotEmpty()) {
             TopNews(
@@ -118,8 +120,3 @@ private fun navigateToDetails(navController: NavHostController, article: Article
     navController.currentBackStackEntry?.savedStateHandle?.set("isTopNews", isTopNews)
     navController.navigate(Screen.Details.route)
 }
-
-//private fun navigateToDetails(navController: NavHostController, article: Article) {
-//    navController.currentBackStackEntry?.savedStateHandle?.set("articleUrl", article.url)
-//    navController.navigate(Screen.Details.route)
-//}
