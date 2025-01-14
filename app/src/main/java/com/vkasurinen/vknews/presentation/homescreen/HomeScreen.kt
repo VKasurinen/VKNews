@@ -41,9 +41,11 @@ fun HomeScreenRoot(
     navController: NavHostController,
     viewModel: HomeViewModel = koinViewModel(),
 ) {
-    val state = viewModel.state.collectAsState().value
+    val homeState by viewModel.homeState.collectAsState()
+    val topHeadlinesState by viewModel.topHeadlinesState.collectAsState()
     HomeScreen(
-        state = state,
+        homeState = homeState,
+        topHeadlinesState = topHeadlinesState,
         onAction = viewModel::onEvent,
         navHostController = navController
     )
@@ -51,14 +53,25 @@ fun HomeScreenRoot(
 
 @Composable
 fun HomeScreen(
-    state: HomeState,
+    homeState: HomeState,
+    topHeadlinesState: TopHeadlinesState,
     onAction: (HomeUiEvent) -> Unit,
     navHostController: NavHostController
 ) {
     Column {
-        if (state.topHeadlines.isNotEmpty()) {
+        Text(
+            text = "Top News",
+            style = MaterialTheme.typography.titleLarge,
+            fontSize = 25.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(horizontal = 8.dp)
+        )
+
+        Spacer(modifier = Modifier.height(6.dp))
+
+        if (topHeadlinesState.topHeadlines.isNotEmpty()) {
             TopNews(
-                topHeadlines = state.topHeadlines,
+                topHeadlines = topHeadlinesState.topHeadlines,
                 navHostController = navHostController,
                 navigateToDetails = ::navigateToDetails
             )
@@ -89,7 +102,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(4.dp))
 
             ArticlesList(
-                state = state,
+                state = homeState,
                 onClick = { article -> navigateToDetails(navHostController, article) }
             )
         }

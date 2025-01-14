@@ -46,7 +46,7 @@ fun ArticlesList(
                 val article = state.articles[index]
                 Column(
                     modifier = Modifier
-                        .padding(8.dp)
+                        .padding(horizontal = 8.dp)
                         .clickable { onClick(article) }
                 ) {
                     CoilImage(

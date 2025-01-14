@@ -23,14 +23,6 @@ fun TopNews(
     navigateToDetails: (NavHostController, Article) -> Unit
 ) {
     Column(modifier = Modifier.padding(horizontal = 8.dp)) {
-        Text(
-            text = "Top News",
-            style = MaterialTheme.typography.titleLarge,
-            fontSize = 25.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(horizontal = 8.dp)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
 
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp)

@@ -17,7 +17,10 @@ class HomeViewModel(
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(HomeState())
-    val state = _state.asStateFlow()
+    val homeState = _state.asStateFlow()
+
+    private var _topHeadlinesState = MutableStateFlow(TopHeadlinesState())
+    val topHeadlinesState = _topHeadlinesState.asStateFlow()
 
     init {
         fetchNews()
@@ -32,11 +35,12 @@ class HomeViewModel(
         }
     }
 
+    //die-zeit
     private fun fetchNews() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
-            newsRepository.getNews(listOf("bbc-news", "abc-news", "die-zeit", "business-insider"))
+            newsRepository.getNews(listOf("bbc-news", "abc-news", "business-insider"))
                 .collectLatest { result ->
                     when (result) {
                         is Resource.Success -> {
@@ -65,7 +69,7 @@ class HomeViewModel(
 
     private fun fetchTopHeadlines() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
+            _topHeadlinesState.update { it.copy(isLoading = true) }
 
             newsRepository.getTopHeadlines("us").collectLatest { result ->
                 when (result) {
@@ -74,8 +78,8 @@ class HomeViewModel(
                             val filteredArticles = articles.filter {
                                 !it.title.contains("[Removed]")
                             }
-                            Log.d("HomeViewModel", "Fetched top headlines: $filteredArticles")
-                            _state.update {
+                            Log.d("HomeViewModel2", "Fetched top headlines: $filteredArticles")
+                            _topHeadlinesState.update {
                                 it.copy(
                                     topHeadlines = filteredArticles,
                                     isLoading = false
@@ -84,10 +88,10 @@ class HomeViewModel(
                         }
                     }
                     is Resource.Error -> {
-                        _state.update { it.copy(isLoading = false) }
+                        _topHeadlinesState.update { it.copy(isLoading = false) }
                     }
                     is Resource.Loading -> {
-                        _state.update { it.copy(isLoading = result.isLoading) }
+                        _topHeadlinesState.update { it.copy(isLoading = result.isLoading) }
                     }
                 }
             }
