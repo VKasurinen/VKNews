@@ -27,6 +27,7 @@ import androidx.navigation.navArgument
 import com.vkasurinen.vknews.presentation.details.DetailsScreenRoot
 import com.vkasurinen.vknews.presentation.homescreen.HomeScreen
 import com.vkasurinen.vknews.presentation.homescreen.HomeScreenRoot
+import com.vkasurinen.vknews.presentation.search.SearchScreenRoot
 import com.vkasurinen.vknews.util.Screen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -92,7 +93,7 @@ fun MainScreen(navController: NavHostController) {
                 }
 
                 composable(Screen.Search.route) {
-
+                    SearchScreenRoot(navController = navController)
                 }
 
                 composable(Screen.Saved.route) {

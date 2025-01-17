@@ -7,6 +7,7 @@ import com.vkasurinen.vknews.data.repository.NewsRepositoryImpl
 import com.vkasurinen.vknews.domain.repository.NewsRepository
 import com.vkasurinen.vknews.presentation.details.DetailsViewModel
 import com.vkasurinen.vknews.presentation.homescreen.HomeViewModel
+import com.vkasurinen.vknews.presentation.search.SearchViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -55,5 +56,6 @@ val appModule = module {
 
     viewModel { HomeViewModel(get()) }
     viewModel { DetailsViewModel(get(), get()) }
+    viewModel { SearchViewModel(get())}
 
 }
