@@ -102,17 +102,15 @@ fun DetailsScreen(
             },
             onBackClick = { navHostController.navigateUp() }
         )
+        
+        Spacer(modifier = Modifier.height(28.dp))
 
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(
-                start = 16.dp,
-                end = 16.dp,
-                top = 16.dp
-            )
+        Column(
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                .fillMaxWidth(),
         ) {
 
-            item {
                 CoilImage(
                     url = article.urlToImage,
                     contentDescription = article.title,
@@ -124,7 +122,7 @@ fun DetailsScreen(
 
                     )
 
-                Spacer(modifier = Modifier.height(35.dp))
+                Spacer(modifier = Modifier.height(60.dp))
 
                 Text(
                     text = article.title,
@@ -133,9 +131,6 @@ fun DetailsScreen(
                     maxLines = 4,
                     overflow = TextOverflow.Ellipsis
                 )
-            }
-
-            item {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -146,8 +141,6 @@ fun DetailsScreen(
                     //maxLines = 3,
                     overflow = TextOverflow.Ellipsis
                 )
-            }
-
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.vkasurinen.vknews.presentation.details.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
