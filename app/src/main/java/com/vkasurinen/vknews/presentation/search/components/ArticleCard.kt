@@ -15,6 +15,8 @@ import com.vkasurinen.vknews.domain.model.Article
 import com.vkasurinen.vknews.domain.model.Source
 import com.vkasurinen.vknews.ui.theme.VKNewsTheme
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -42,8 +44,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.request.ImageRequest
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ArticleCard(
     modifier: Modifier = Modifier,
@@ -128,8 +133,12 @@ fun ArticleCard(
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.width(3.dp))
+
+                val parsedDate = ZonedDateTime.parse(article.publishedAt)
+                val formattedDate = parsedDate.format(DateTimeFormatter.ofPattern("dd:MM:yyyy"))
+
                 Text(
-                    text = article.publishedAt,
+                    text = formattedDate,
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 15.sp
@@ -139,6 +148,7 @@ fun ArticleCard(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
