@@ -16,6 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -40,15 +42,15 @@ fun MainScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                modifier = Modifier.height(45.dp),
                 title = {
-                    IconButton(onClick = { /* Handle menu click */ }) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Menu",
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
-                    }
+                    Text(
+                        text = "VKNews",
+                        color = Color(0xFF009BBA),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 40.sp,
+                        fontStyle = FontStyle.Italic
+                    )
+
                 },
                 actions = {
                     IconButton(onClick = { menuExpanded = true }) {
@@ -115,7 +117,7 @@ fun BottomNavigationBar(bottomNavController: NavHostController) {
     val selected = rememberSaveable { mutableStateOf(0) }
 
     NavigationBar(
-        modifier = Modifier.height(45.dp),
+        modifier = Modifier.height(65.dp),
         containerColor = Color.Transparent,
         contentColor = MaterialTheme.colorScheme.onBackground
     ) {
@@ -139,7 +141,7 @@ fun BottomNavigationBar(bottomNavController: NavHostController) {
                             Icon(
                                 imageVector = bottomItem.icon,
                                 contentDescription = bottomItem.title,
-                                tint = MaterialTheme.colorScheme.onBackground,
+                                tint = if(selected.value == index) Color(0xFF009BBA) else MaterialTheme.colorScheme.onBackground,
                                 modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.height(1.dp))

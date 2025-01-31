@@ -9,13 +9,13 @@ interface NewsRepository {
 
     suspend fun getNews(sources: List<String>): Flow<Resource<List<Article>>>
 
-    suspend fun searchNews(searchQuery: String, sources: List<String>): Flow<Resource<List<Article>>>
+//    suspend fun searchNews(searchQuery: String, sources: List<String>): Flow<Resource<List<Article>>>
 
-    suspend fun upsertArticle(article: Article)
-
-    suspend fun deleteArticle(article: Article)
-
-    suspend fun getArticles(): Flow<Resource<List<Article>>>
+//    suspend fun upsertArticle(article: Article)
+//
+//    suspend fun deleteArticle(article: Article)
+//
+//    suspend fun getArticles(): Flow<Resource<List<Article>>>
 
     suspend fun getArticle(url: String): Flow<Resource<Article>>?
 
