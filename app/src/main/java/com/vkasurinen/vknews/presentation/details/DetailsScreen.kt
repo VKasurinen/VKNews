@@ -5,15 +5,19 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -21,9 +25,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import coil.size.Size
 import com.vkasurinen.vknews.domain.model.Article
 import com.vkasurinen.vknews.domain.model.Source
-import com.vkasurinen.vknews.presentation.homescreen.components.CoilImage
+import com.vkasurinen.vknews.presentation.details.components.ArchShape
 import com.vkasurinen.vknews.presentation.details.components.DetailsTopBar
 import com.vkasurinen.vknews.ui.theme.VKNewsTheme
 import org.koin.androidx.compose.koinViewModel
@@ -66,11 +73,64 @@ fun DetailsScreen(
 ) {
     val context = LocalContext.current
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPadding()
     ) {
+        // IMAGE ----------------------------------------------------------
+        val painter = rememberAsyncImagePainter(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(article.urlToImage)
+                .size(Size.ORIGINAL)
+                .build()
+        )
+
+        Image(
+            painter = painter,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp)
+                .clip(ArchShape())
+        )
+        // IMAGE ----------------------------------------------------------
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 300.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = article.title,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 25.sp,
+                color = MaterialTheme.colorScheme.primary,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = article.description,
+                fontSize = 17.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Text(
+                text = article.content,
+                fontSize = 15.sp,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+
         DetailsTopBar(
             onBrowsingClick = {
                 val url = article.url
@@ -81,7 +141,6 @@ fun DetailsScreen(
                         context.startActivity(intent)
                     } else {
                         Log.e("DetailsScreen", "No activity found to handle the intent for URL: $url")
-                        // Fallback mechanism: Show a message to the user
                         Toast.makeText(context, "No application can handle this request. Please install a web browser.", Toast.LENGTH_LONG).show()
                     }
                 } else {
@@ -100,50 +159,12 @@ fun DetailsScreen(
             onBookMarkClick = {
                 onEvent(DetailsUiEvent.UpsertDeleteArticle(article))
             },
-            onBackClick = { navHostController.navigateUp() }
+            onBackClick = { navHostController.navigateUp() },
+            modifier = Modifier.align(Alignment.TopCenter)
         )
-        
-        Spacer(modifier = Modifier.height(28.dp))
-
-        Column(
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp)
-                .fillMaxWidth(),
-        ) {
-
-                CoilImage(
-                    url = article.urlToImage,
-                    contentDescription = article.title,
-                    aspectRatio = 4f / 3f,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .clip(MaterialTheme.shapes.medium),
-
-                    )
-
-                Spacer(modifier = Modifier.height(60.dp))
-
-                Text(
-                    text = article.title,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp,
-                    maxLines = 4,
-                    overflow = TextOverflow.Ellipsis
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = article.title,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 15.sp,
-                    //maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
-                )
-        }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun DetailsScreenPreview() {
