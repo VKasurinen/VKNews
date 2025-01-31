@@ -2,6 +2,8 @@ package com.vkasurinen.vknews.presentation.search
 
 import NewsCategories
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +33,7 @@ import com.vkasurinen.vknews.presentation.search.components.SearchBar
 import com.vkasurinen.vknews.util.Screen
 import org.koin.androidx.compose.koinViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun SearchScreenRoot(
@@ -45,13 +48,13 @@ fun SearchScreenRoot(
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun SearchScreen(
     state: SearchState,
     onAction: (SearchEvent) -> Unit,
     navHostController: NavHostController
 ) {
-
     val searchQuery = remember { mutableStateOf("") }
 
     Column(
@@ -59,10 +62,8 @@ private fun SearchScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-
         SearchBar(
-            modifier = Modifier
-                .padding(horizontal = 8.dp),
+            modifier = Modifier.padding(horizontal = 8.dp),
             text = searchQuery.value,
             onValueChange = {
                 searchQuery.value = it
@@ -84,7 +85,6 @@ private fun SearchScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-
         if (state.isLoading) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -94,7 +94,7 @@ private fun SearchScreen(
             }
         } else {
             LazyColumn {
-                items(state.articles) {article ->
+                items(state.filteredArticles) { article ->
                     ArticleCard(
                         article = article,
                         navHostController = navHostController,

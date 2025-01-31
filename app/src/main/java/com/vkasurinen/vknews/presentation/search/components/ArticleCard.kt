@@ -135,7 +135,7 @@ fun ArticleCard(
                 Spacer(modifier = Modifier.width(3.dp))
 
                 val parsedDate = ZonedDateTime.parse(article.publishedAt)
-                val formattedDate = parsedDate.format(DateTimeFormatter.ofPattern("dd:MM:yyyy"))
+                val formattedDate = parsedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
 
                 Text(
                     text = formattedDate,

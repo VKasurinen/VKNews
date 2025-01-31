@@ -69,7 +69,7 @@ fun TopNews(
                             )
 
                             val parsedDate = ZonedDateTime.parse(article.publishedAt)
-                            val formattedDate = parsedDate.format(DateTimeFormatter.ofPattern("dd:MM:yyyy"))
+                            val formattedDate = parsedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
 
                             Text(
                                 text = formattedDate,
