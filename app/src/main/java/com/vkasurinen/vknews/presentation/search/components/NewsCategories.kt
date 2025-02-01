@@ -76,7 +76,8 @@ fun NewsCategoriesPreview() {
                     url = "https://example.com/1",
                     urlToImage = "https://example.com/image1.jpg",
                     publishedAt = "2025-01-13T12:30:17Z",
-                    content = "Content 1"
+                    content = "Content 1",
+                    isBookmarked = false
                 ),
                 Article(
                     source = Source(id = "2", name = "Source 2"),
@@ -86,7 +87,8 @@ fun NewsCategoriesPreview() {
                     url = "https://example.com/2",
                     urlToImage = "https://example.com/image2.jpg",
                     publishedAt = "2025-01-14T12:30:17Z",
-                    content = "Content 2"
+                    content = "Content 2",
+                    isBookmarked = false
                 )
             ),
             onCategorySelected =  {},

@@ -1,6 +1,8 @@
 package com.vkasurinen.vknews
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -26,12 +28,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.vkasurinen.vknews.presentation.bookmark.BookMarkScreenRoot
 import com.vkasurinen.vknews.presentation.details.DetailsScreenRoot
 import com.vkasurinen.vknews.presentation.homescreen.HomeScreen
 import com.vkasurinen.vknews.presentation.homescreen.HomeScreenRoot
 import com.vkasurinen.vknews.presentation.search.SearchScreenRoot
 import com.vkasurinen.vknews.util.Screen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -99,7 +103,7 @@ fun MainScreen(navController: NavHostController) {
                 }
 
                 composable(Screen.Saved.route) {
-
+                    BookMarkScreenRoot(navController = navController)
                 }
             }
         }
@@ -116,43 +120,49 @@ fun BottomNavigationBar(bottomNavController: NavHostController) {
 
     val selected = rememberSaveable { mutableStateOf(0) }
 
-    NavigationBar(
-        modifier = Modifier.height(65.dp),
-        containerColor = Color.Transparent,
-        contentColor = MaterialTheme.colorScheme.onBackground
-    ) {
-        Row(modifier = Modifier.background(Color.Transparent)) {
-            items.forEachIndexed { index, bottomItem ->
-                NavigationBarItem(
-                    selected = selected.value == index,
-                    onClick = {
-                        selected.value = index
-                        when (selected.value) {
-                            0 -> bottomNavController.navigate(Screen.Home.route)
-                            1 -> bottomNavController.navigate(Screen.Search.route)
-                            2 -> bottomNavController.navigate(Screen.Saved.route)
+    BoxWithConstraints {
+        val dynamicHeight = maxHeight * 0.085f
+
+
+        NavigationBar(
+            modifier = Modifier.height(dynamicHeight),
+//          modifier = Modifier.height(65.dp),
+            containerColor = Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.onBackground
+        ) {
+            Row(modifier = Modifier.background(Color.Transparent)) {
+                items.forEachIndexed { index, bottomItem ->
+                    NavigationBarItem(
+                        selected = selected.value == index,
+                        onClick = {
+                            selected.value = index
+                            when (selected.value) {
+                                0 -> bottomNavController.navigate(Screen.Home.route)
+                                1 -> bottomNavController.navigate(Screen.Search.route)
+                                2 -> bottomNavController.navigate(Screen.Saved.route)
+                            }
+                        },
+                        icon = {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center,
+                            ) {
+                                Icon(
+                                    imageVector = bottomItem.icon,
+                                    contentDescription = bottomItem.title,
+                                    tint = if(selected.value == index) Color(0xFF009BBA) else MaterialTheme.colorScheme.onBackground,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Spacer(modifier = Modifier.height(1.dp))
+                                Text(
+                                    text = bottomItem.title,
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    fontSize = 10.sp
+                                )
+                            }
                         }
-                    },
-                    icon = {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Icon(
-                                imageVector = bottomItem.icon,
-                                contentDescription = bottomItem.title,
-                                tint = if(selected.value == index) Color(0xFF009BBA) else MaterialTheme.colorScheme.onBackground,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.height(1.dp))
-                            Text(
-                                text = bottomItem.title,
-                                color = MaterialTheme.colorScheme.onBackground,
-                                fontSize = 10.sp
-                            )
-                        }
-                    }
-                )
+                    )
+                }
             }
         }
     }

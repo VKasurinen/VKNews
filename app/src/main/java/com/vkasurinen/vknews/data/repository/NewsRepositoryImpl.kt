@@ -13,6 +13,7 @@ import com.vkasurinen.vknews.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -144,6 +145,23 @@ class NewsRepositoryImpl(
                 }
             } catch (e: Exception) {
                 emit(Resource.Error("Error fetching article: ${e.message}"))
+            }
+            emit(Resource.Loading(false))
+        }
+    }
+
+    override suspend fun upsertArticle(article: Article) {
+        newsDao.upsert(article.toEntity())
+    }
+
+    override suspend fun getBookmarkedArticles(): Flow<Resource<List<Article>>> {
+        return flow {
+            emit(Resource.Loading(true))
+            try {
+                val articles = newsDao.getBookmarkedArticles().firstOrNull()?.map { it.toDomainModel() } ?: emptyList()
+                emit(Resource.Success(articles))
+            } catch (e: Exception) {
+                emit(Resource.Error("Error fetching bookmarked articles: ${e.message}"))
             }
             emit(Resource.Loading(false))
         }

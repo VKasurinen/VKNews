@@ -29,7 +29,8 @@ fun ArticleEntity.toDomainModel(): Article {
         source = Source(sourceId, sourceName),
         title = title,
         url = url,
-        urlToImage = urlToImage
+        urlToImage = urlToImage,
+        isBookmarked = isBookmarked
     )
 }
 
@@ -43,7 +44,8 @@ fun Article.toEntity(): ArticleEntity {
         sourceName = source.name,
         title = title,
         url = url,
-        urlToImage = urlToImage
+        urlToImage = urlToImage,
+        isBookmarked = isBookmarked
     )
 }
 
@@ -56,7 +58,8 @@ fun TopHeadlineEntity.toDomainModel(): Article {
         source = Source(sourceId, sourceName),
         title = title,
         url = url,
-        urlToImage = urlToImage
+        urlToImage = urlToImage,
+        isBookmarked = isBookmarked
     )
 }
 

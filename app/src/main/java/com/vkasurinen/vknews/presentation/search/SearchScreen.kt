@@ -112,7 +112,7 @@ private fun SearchScreen(
 }
 
 
-private fun navigateToDetails(navController: NavHostController, article: Article) {
+fun navigateToDetails(navController: NavHostController, article: Article) {
     navController.currentBackStackEntry?.savedStateHandle?.set("articleUrl", article.url)
     navController.navigate(Screen.Details.route)
 }

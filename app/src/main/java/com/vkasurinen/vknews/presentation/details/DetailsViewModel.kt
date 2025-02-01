@@ -1,8 +1,10 @@
 package com.vkasurinen.vknews.presentation.details
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vkasurinen.vknews.domain.model.Article
 import com.vkasurinen.vknews.domain.repository.NewsRepository
 import com.vkasurinen.vknews.presentation.homescreen.HomeUiEvent
 import com.vkasurinen.vknews.util.Resource
@@ -28,7 +30,7 @@ class DetailsViewModel(
 
     fun onEvent(event: DetailsUiEvent) {
         when (event) {
-            is DetailsUiEvent.UpsertDeleteArticle -> TODO()
+            is DetailsUiEvent.UpsertDeleteArticle -> saveArticle(event.article)
         }
     }
 
@@ -54,7 +56,6 @@ class DetailsViewModel(
         }
     }
 
-
     fun getTopHeadlineArticle(url: String) {
         viewModelScope.launch {
             _detailsState.update { it.copy(isLoading = true) }
@@ -77,4 +78,11 @@ class DetailsViewModel(
         }
     }
 
+    private fun saveArticle(article: Article) {
+        viewModelScope.launch {
+            val updatedArticle = article.copy(isBookmarked = !article.isBookmarked)
+            newsRepository.upsertArticle(updatedArticle)
+            Log.d("DetailsViewModel", "Article bookmarked status changed: ${updatedArticle.isBookmarked}")
+        }
+    }
 }

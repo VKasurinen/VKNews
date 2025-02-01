@@ -22,4 +22,7 @@ interface NewsRepository {
     suspend fun getTopHeadlines(country: String): Flow<Resource<List<Article>>>
     suspend fun getTopHeadlineArticle(url: String): Flow<Resource<Article>>
 
+    suspend fun upsertArticle(article: Article)
+
+    suspend fun getBookmarkedArticles(): Flow<Resource<List<Article>>>
 }

@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -35,9 +37,9 @@ fun DetailsTopBar(
     onShareClick: () -> Unit,
     onBookMarkClick: () -> Unit,
     onBackClick: () -> Unit,
+    isBookmarked: Boolean,
     modifier: Modifier = Modifier
 ) {
-
     TopAppBar(
         modifier = Modifier
             .background(Color.Transparent)
@@ -59,7 +61,6 @@ fun DetailsTopBar(
             }
         },
         actions = {
-
             IconButton(
                 onClick = onBookMarkClick,
                 modifier = Modifier
@@ -68,8 +69,9 @@ fun DetailsTopBar(
                     .background(MaterialTheme.colorScheme.background.copy(alpha = 0.7f))
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_bookmark),
-                    contentDescription = null,
+                    imageVector = if (isBookmarked) Icons.Default.Bookmark else Icons.Default.BookmarkBorder,
+                    contentDescription = "Bookmark",
+                    tint = if (isBookmarked) Color.Red else MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.size(24.dp)
                 )
             }
@@ -106,7 +108,6 @@ fun DetailsTopBar(
                 )
             }
         },
-
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.Transparent
         )
@@ -122,6 +123,7 @@ fun DetailsTopBarPreview() {
             onShareClick = { /*TODO*/ },
             onBookMarkClick = { /*TODO*/ },
             onBackClick = {},
+            isBookmarked = true,
             onBrowsingClick = {})
     }
 }

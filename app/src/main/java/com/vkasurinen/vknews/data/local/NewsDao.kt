@@ -25,4 +25,7 @@ interface NewsDao {
 
     @Query("SELECT * FROM ArticleEntity WHERE url=:url")
     suspend fun getArticle(url: String): ArticleEntity?
+
+    @Query("SELECT * FROM ArticleEntity WHERE isBookmarked = 1")
+    fun getBookmarkedArticles(): Flow<List<ArticleEntity>>
 }

@@ -13,5 +13,6 @@ data class TopHeadlineEntity(
     val publishedAt: String,
     val content: String,
     val sourceId: String,
-    val sourceName: String
+    val sourceName: String,
+    val isBookmarked: Boolean = false
 )
