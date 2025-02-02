@@ -3,6 +3,7 @@ package com.vkasurinen.vknews.presentation.bookmark
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vkasurinen.vknews.domain.repository.NewsRepository
+import com.vkasurinen.vknews.presentation.details.DetailsState
 import com.vkasurinen.vknews.util.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,6 +19,10 @@ class BookMarkViewModel(
     val state = _state.asStateFlow()
 
     init {
+        loadBookmarkedArticles()
+    }
+
+    fun refreshBookmarkedArticles() {
         loadBookmarkedArticles()
     }
 

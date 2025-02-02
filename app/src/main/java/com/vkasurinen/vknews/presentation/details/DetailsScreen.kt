@@ -162,6 +162,9 @@ fun DetailsScreen(
             },
             onBookMarkClick = {
                 onEvent(DetailsUiEvent.UpsertDeleteArticle(article))
+                navHostController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set("refreshBookmarks", true) // Notify BookMarkScreen
             },
             onBackClick = { navHostController.navigateUp() },
             isBookmarked = article.isBookmarked,

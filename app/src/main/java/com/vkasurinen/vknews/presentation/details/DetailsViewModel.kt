@@ -30,7 +30,7 @@ class DetailsViewModel(
 
     fun onEvent(event: DetailsUiEvent) {
         when (event) {
-            is DetailsUiEvent.UpsertDeleteArticle -> saveArticle(event.article)
+            is DetailsUiEvent.UpsertDeleteArticle -> toggleFavorite(event.article.url)
         }
     }
 
@@ -78,11 +78,20 @@ class DetailsViewModel(
         }
     }
 
-    private fun saveArticle(article: Article) {
+    private fun toggleFavorite(articleUrl: String) {
         viewModelScope.launch {
-            val updatedArticle = article.copy(isBookmarked = !article.isBookmarked)
-            newsRepository.upsertArticle(updatedArticle)
-            Log.d("DetailsViewModel", "Article bookmarked status changed: ${updatedArticle.isBookmarked}")
+            try {
+                val currentArticle = _detailsState.value.article
+                if (currentArticle != null && currentArticle.url == articleUrl) {
+                    val updatedArticle = currentArticle.copy(isBookmarked = !currentArticle.isBookmarked)
+                    _detailsState.update { it.copy(article = updatedArticle) }
+                    newsRepository.upsertArticle(updatedArticle)
+                    savedStateHandle.set("refreshBookmarks", true) // Trigger refresh
+                }
+            } catch (e: Exception) {
+                Log.d("DetailsViewModel", "Error on toggling favorite")
+                _detailsState.update { it.copy(isLoading = false) }
+            }
         }
     }
 }

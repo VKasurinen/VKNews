@@ -25,6 +25,7 @@ materialIconsExtended = "1.7.6"
 navigationCompose = "2.8.5"
 accompanistSystemUiController = "0.27.0"
 uiTextGoogleFonts = "1.7.6"
+runtimeLivedata = "1.7.7"
 
 
 [libraries]
@@ -67,6 +68,7 @@ accompanist-systemuicontroller = { group = "com.google.accompanist", name = "acc
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 
 material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "materialIconsExtended" }
+androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 
 
 [plugins]
