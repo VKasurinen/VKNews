@@ -6,16 +6,19 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.vkasurinen.vknews.R
 import com.vkasurinen.vknews.domain.model.Article
 import com.vkasurinen.vknews.util.Screen
 import java.time.ZonedDateTime
@@ -49,14 +52,15 @@ fun TopNews(
                     ) {
 
                         Row(
-                            verticalAlignment = Alignment.Bottom,
+                            verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ){
                             Text(
                                 text = "Breaking",
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.primary
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.alignByBaseline()
                             )
 
                             Text(
@@ -65,7 +69,17 @@ fun TopNews(
                                 fontWeight = FontWeight.Medium,
                                 color = MaterialTheme.colorScheme.onBackground,
                                 overflow = TextOverflow.Ellipsis,
-                                maxLines = 1
+                                maxLines = 1,
+                                modifier = Modifier.alignByBaseline()
+                            )
+
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_time),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(15.dp)
+                                    .offset(y = (-2).dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
 
                             val parsedDate = ZonedDateTime.parse(article.publishedAt)
@@ -77,11 +91,9 @@ fun TopNews(
                                 fontWeight = FontWeight.Medium,
                                 color = MaterialTheme.colorScheme.onBackground,
                                 overflow = TextOverflow.Ellipsis,
-                                maxLines = 1
+                                maxLines = 1,
+                                modifier = Modifier.alignByBaseline()
                             )
-
-
-
                         }
 
                         Spacer(modifier = Modifier.height(5.dp))

@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -123,16 +124,19 @@ fun ArticleCard(
                     text = article.source.name,
                     style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 15.sp
+                    fontSize = 15.sp,
+                    modifier = Modifier.alignByBaseline()
                 )
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(4.dp))
                 Icon(
                     painter = painterResource(id = R.drawable.ic_time),
                     contentDescription = null,
-                    modifier = Modifier.size(15.dp),
+                    modifier = Modifier
+                        .size(15.dp)
+                        .offset(y = (-2).dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                Spacer(modifier = Modifier.width(3.dp))
+                Spacer(modifier = Modifier.width(4.dp))
 
                 val parsedDate = ZonedDateTime.parse(article.publishedAt)
                 val formattedDate = parsedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
@@ -141,7 +145,8 @@ fun ArticleCard(
                     text = formattedDate,
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 15.sp
+                    fontSize = 15.sp,
+                    modifier = Modifier.alignByBaseline()
                 )
             }
         }
